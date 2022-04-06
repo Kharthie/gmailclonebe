@@ -24,43 +24,6 @@ mongoose.connect(connection__url);
 app.get("/", (req, res) => res.status(200).send("hello world"));
 
 
-app.post("/data", (req, res) => {
-  const bodyvalue = req.body;
-
-  
-  sendMail.create(bodyvalue, (err, data) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.status(200).send(data);
-    }
-  });
-});
-
-
-app.post("/mail", (req, res) => {
-  console.log(req.body);
-  sendMail.find(req.body, (err, data) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.status(200).send(data);
-    }
-  });
-});
-
-
-app.post("/singlemail", (req, res) => {
-  console.log(req.body);
-  sendMail.findOne(req.body, (err, data) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.status(200).send(data);
-    }
-  });
-});
-
 
 app.post("/register", (req, res) => {
   //hash the password
@@ -141,6 +104,45 @@ let authenticate = (req, res, next) => {
 };
 
 
+
+app.post("/clone", (req, res) => {
+  const bodyvalue = req.body;
+
+  
+  sendMail.create(bodyvalue, (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(data);
+    }
+  });
+});
+
+
+app.post("/mail", (req, res) => {
+  console.log(req.body);
+  sendMail.find(req.body, (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(data);
+    }
+  });
+});
+
+
+app.post("/singlemail", (req, res) => {
+  console.log(req.body);
+  sendMail.findOne(req.body, (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(data);
+    }
+  });
+});
+
+
 app.get("/main", authenticate, (req, res) => {
   res.json({ mesaagae: 20 });
 });
@@ -159,4 +161,4 @@ app.get("/viewall", (req, res) => {
 
 
 const port = process.env.PORT || 5001;
-app.listen(port, () => console.log(`Server Running on Localhost:${port}`));
+app.listen(port, () => console.log(`Server Running on Localhost:${port} ✅✅✅✅✅✅✅`));

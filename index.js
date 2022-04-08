@@ -24,9 +24,45 @@ mongoose.connect(connection__url);
 app.get("/", (req, res) => res.status(200).send("hello world"));
 
 
+app.post("/clone", (req, res) => {
+  const bodyvalue = req.body;
+
+  
+  sendMail.create(bodyvalue, (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(data);
+    }
+  });
+});
+
+
+app.post("/mail", (req, res) => {
+  console.log(req.body);
+  sendMail.find(req.body, (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(data);
+    }
+  });
+});
+
+
+app.post("/singlemail", (req, res) => {
+  console.log(req.body);
+  sendMail.findOne(req.body, (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(data);
+    }
+  });
+});
+
 
 app.post("/register", (req, res) => {
-  //hash the password
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(req.body.password, salt);
   req.body.password = hash;
@@ -79,10 +115,10 @@ app.post("/login", async (req, res) => {
         let token = jwt.sign({ userid: user._id }, secret, { expiresIn: "1d" });
         res.json({ token });
       } else {
-        res.status(401).json({ message: "wrong password" });
+        res.status(401).json({ message: "Invalid Password" });
       }
     } else {
-      res.status(401).json({ message: "user not found" });
+      res.status(401).json({ message: "Invalid user" });
     }
   } catch (error) {
     console.log(error);
@@ -96,51 +132,12 @@ let authenticate = (req, res, next) => {
       let result = jwt.verify(req.headers.authentication, secret);
       next();
     } catch (error) {
-      res.status(401).json({ mesaagae: "token expired" });
+      res.status(401).json({ message: "Token Expired" });
     }
   } else {
-    res.status(401).json({ message: "not authorized" });
+    res.status(401).json({ message: "Not Authorized" });
   }
 };
-
-
-
-app.post("/clone", (req, res) => {
-  const bodyvalue = req.body;
-
-  
-  sendMail.create(bodyvalue, (err, data) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.status(200).send(data);
-    }
-  });
-});
-
-
-app.post("/mail", (req, res) => {
-  console.log(req.body);
-  sendMail.find(req.body, (err, data) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.status(200).send(data);
-    }
-  });
-});
-
-
-app.post("/singlemail", (req, res) => {
-  console.log(req.body);
-  sendMail.findOne(req.body, (err, data) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.status(200).send(data);
-    }
-  });
-});
 
 
 app.get("/main", authenticate, (req, res) => {
